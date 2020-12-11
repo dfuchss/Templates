@@ -5,7 +5,7 @@
     This configuration file was written by the eclipse-cs plugin configuration editor
 -->
 <!--
-    Checkstyle-Configuration: Style
+    Checkstyle-Configuration: Checkstyle
     Description: none
 -->
 <module name="Checker">
@@ -88,8 +88,12 @@
     <module name="SimplifyBooleanReturn"/>
     <module name="StringLiteralEquality"/>
     <module name="ModifierOrder"/>
-    <module name="ClassTypeParameterName"/>
-    <module name="MethodTypeParameterName"/>
+    <module name="ClassTypeParameterName">
+      <property name="format" value="^[A-Z][A-Za-z]*$"/>
+    </module>
+    <module name="MethodTypeParameterName">
+      <property name="format" value="^[A-Z][A-Za-z]*$"/>
+    </module>
     <module name="PackageName"/>
     <module name="OuterTypeNumber"/>
     <module name="MethodParamPad"/>
