@@ -1,0 +1,49 @@
+name: Sync with Upstream (Many Repositories)
+ 
+on:
+  push:
+    branches: 
+      - main
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  schedule:
+    - cron: "00 00 * * *"
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    
+    # Define the accessable Environment Variables: GH_TOKEN is a personal Access Token with suitable access to push commits
+    env:
+      repo_url: ${{ matrix.repo_url }}
+      branch: ${{ matrix.branch }}
+      upstream: ${{ matrix.upstream }}
+      repo: ${{ matrix.repo }}
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    
+    strategy:
+      matrix:
+        repository: [repoA, repoB]
+        include:
+          - repository: repoA
+            repo: ***name_of_repoA***
+            repo_url: "***github_username***/***github_repo***" 
+            upstream: "***upstream_github_username***/***github_repo_name***"  
+            branch: "master"
+          - repository: repoB
+            repo: example
+            repo_url: "dfuchss/example"  
+            upstream: "upstream_user/example" 
+            branch: "master"
+            
+    steps:
+      - name: Clone Repository
+        run: git clone -b $branch "https://dfuchss:$GH_TOKEN@github.com/$repo_url.git"
+      - name: Register Upstream
+        run: cd $repo && git remote add upstream "https://github.com/$upstream.git" && git fetch upstream
+      - name: Merge Upstream
+        run: cd $repo && git config user.email "ci@fuchss.org" && git config user.name "GitHub CI" && git merge upstream/$branch
+      - name: Push to Origin
+        run: cd $repo && git push origin $branch
+      - name: Cleanup
+        run: rm -rf $repo
