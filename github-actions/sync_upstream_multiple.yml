@@ -40,10 +40,10 @@ jobs:
       - name: Clone Repository
         run: git clone -b $branch "https://dfuchss:$GH_TOKEN@github.com/$repo_url.git"
       - name: Register Upstream
-        run: cd $repo && git remote add upstream "https://github.com/$upstream.git" && git fetch upstream
+        run: cd $repo && git remote add upstream "https://github.com/$upstream.git" && git fetch upstream && git fetch upstream --tags
       - name: Merge Upstream
         run: cd $repo && git config user.email "ci@fuchss.org" && git config user.name "GitHub CI" && git merge upstream/$branch
       - name: Push to Origin
-        run: cd $repo && git push origin $branch
+        run: cd $repo && git push origin $branch && git push --tags
       - name: Cleanup
         run: rm -rf $repo
